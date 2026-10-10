@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestDone Pro Ultimate</title>
+    <style>
+        :root {
+            --bg-dark: #0f111a;
+            --panel-bg: #1e2235;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --gold: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--panel-bg); border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .stats-hud { display: flex; gap: 20px; font-weight: bold; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .xp-display { color: var(--accent-blue); }
+        .gold-display { color: var(--gold); }
+        .container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .nav-panel { background: var(--panel-bg); padding: 20px; border-radius: 12px; height: fit-content; }
+        .nav-btn { display: block; w-100; width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border: none; color: white; text-align: left; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; }
+        .nav-btn:hover, .nav-btn.active { background: var(--accent-blue); }
+        .main-content { background: var(--panel-bg); padding: 30px; border-radius: 12px; min-height: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .hidden { display: none; }
+        h1, h2, h3 { margin-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; }
+        button.action-btn { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; transition: 0.2s; }
+        button.action-btn:hover { opacity: 0.9; }
+        .map-track { display: flex; justify-content: space-between; position: relative; margin: 30px 0; padding: 0 10px; }
+        .map-track::before { content: ''; position: absolute; top: 20px; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 1; }
+        .node { position: relative; z-index: 2; background: #374151; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid #4b5563; }
+        .node.active { background: var(--accent-blue); border-color: #60a5fa; box-shadow: 0 0 15px var(--accent-blue); }
+        .node.complete { background: var(--accent-green); border-color: #34d399; }
+        .level-card { border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; background: rgba(0,0,0,0.15); margin-top: 15px; }
+        .reroll-box { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .badge-grid, .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
+        .badge-box, .store-card { background: rgba(255,255,255,0.05); p-15; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .badge-box.unlocked { border-color: var(--gold); background: rgba(245,158,11,0.1); }
+        .badge-icon { font-size: 30px; margin-bottom: 5px; }
+        .timer-box { font-size: 35px; font-weight: bold; color: var(--accent-blue); text-align: center; margin: 15px 0; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">⚔️ QuestDone <span style="color:var(--accent-blue)">Pro</span></div>
+    <div class="stats-hud">
+        <div class="stat-box">Level: <span id="hud-level">1</span></div>
+        <div class="stat-box">XP: <span id="hud-xp" class="xp-display">0</span></div>
+        <div class="stat-box">Gold: <span id="hud-gold" class="gold-display">100</span></div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="nav-panel">
+        <button class="nav-btn active" onclick="switchTab('setup')">⚙️ Setup Deck</button>
+        <button class="nav-btn" onclick="switchTab('quest')">🎮 Active Quest</button>
+        <button class="nav-btn" onclick="switchTab('store')">🏪 Virtual Store</button>
+        <button class="nav-btn" onclick="switchTab('rewards')">🎁 Real Rewards</button>
+        <button class="nav-btn" onclick="switchTab('vault')">🏆 Trophy Vault</button>
+    </div>
+
+    <div class="main-content">
+        <!-- SETUP TAB -->
+        <section id="tab-setup">
+            <h2>Start a New Task Journey</h2>
+            <label>What are you working on?</label>
+            <input type="text" id="task-title" placeholder="e.g., History Research Paper or Physics Presentation">
+            
+            <label>Quest Mode Variant</label>
+            <select id="task-type">
+                <option value="essay">📄 Essay Quest Mode (Written Outline)</option>
+                <option value="presentation">🎤 Presentation Quest Mode (Slide & Speech Outline)</option>
+            </select>
+
+            <div class="grid-2">
+                <div>
+                    <label>Assignment Scale Size</label>
+                    <select id="task-size">
+                        <option value="small">Short Scope (1-3 Pages / 5 Slides)</option>
+                        <option value="medium" selected>Standard Scope (4-7 Pages / 10 Slides)</option>
+                        <option value="large">Epic Scope (8+ Pages / 15+ Slides)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Days Until Deadline</label>
+                    <input type="number" id="task-days" value="5" min="1">
+                </div>
+            </div>
+            <button class="action-btn" onclick="generateQuest()">Forge Assignment Blueprint ➔</button>
+        </section>
+
+        <!-- QUEST TAB -->
+        <section id="tab-quest" class="hidden">
+            <h2 id="quest-header">Active Assignment Quest</h2>
+            
+            <!-- Map Progression Tracker -->
+            <div class="map-track">
+                <div class="node active" id="node-1">1</div>
+                <div class="node" id="node-2">2</div>
+                <div class="node" id="node-3">3</div>
+                <div class="node" id="node-4">4</div>
+            </div>
+
+            <!-- LEVEL 1 -->
+            <div id="lvl-1-box" class="level-card">
+                <h3>Level 1 Structure: Outline Blueprint Selection</h3>
+                <p style="margin-bottom: 10px; color: var(--text-muted);">Review the automatically generated structural format matching your submission criteria below.</p>
+                <div class="reroll-box">
+                    <textarea id="structure-preview" rows="4" readonly></textarea>
+                    <button class="nav-btn" id="reroll-btn" onclick="rerollStructure()" style="width:auto; white-space:nowrap;">🎲 Try Another (<span id="reroll-count">5</span> left)</button>
+                </div>
+                <button class="action-btn" onclick="clearLevel(1)">Lock Format & Advance to Level 2 ➔</button>
+            </div>
+
+            <!-- LEVEL 2 -->
+            <div id="lvl-2-box" class="level-card hidden">
+                <h3>Level 2 Learn: Foundational Knowledge Deck</h3>
+                <div class="grid-2" style="margin-top:15px;">
+                    <div>
+                        <h4>📚 Study Blueprint Materials</h4>
+                        <div id="chapters-list"></div>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                        <h4>🎯 Knowledge Viewer</h4>
+                        <div id="learning-content" style="margin-top: 10px; color: var(--text-muted);">Select a study chapter block on the left to read resources or view tutorial layout streams.</div>
+                    </div>
+                </div>
+                <button class="action-btn" onclick="clearLevel(2)" style="margin-top:20px;">Knowledge Secured! Proceed to Level 3 ➔</button>
+            </div>
+
+            <!-- LEVEL 3 -->
+            <div id="lvl-3-box" class="level-card hidden">
+                <h3>Level 3 Write: The Narrative Forge</h3>
+                <div class="grid-2">
+                    <div>
+                        <div class="timer-box" id="pomodoro-time">25:00</div>
+                        <button class="nav-btn" onclick="togglePomodoro()" id="pomo-btn" style="text-align:center;">⏱️ Start Focus Timer</button>
+                        <p style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:5px;">Work intervals reward double bonus ticks!</p>
+                    </div>
+                    <div>
+                        <h4>✍️ Draft Composition Area</h4>
+                        <textarea id="draft-input" placeholder="Begin typing out your structured responses, slide notes, or paragraphs here..." rows="8" oninput="updateReview()"></textarea>
+                    </div>
+                </div>
+                <button class="action-btn" onclick="clearLevel(3)">Draft Completed! Proceed to Final Review ➔</button>
+            </div>
+
+            <!-- LEVEL 4 -->
+            <div id="lvl-4-box" class="level-card hidden">
+                <h3>Level 4 Review: Rubric Calibration Guard</h3>
+                <div class="grid-2">
