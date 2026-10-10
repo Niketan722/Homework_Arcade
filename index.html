@@ -14,7 +14,7 @@
             --text-muted: #9ca3af;
             --gold: #f59e0b;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--panel-bg); border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .stats-hud { display: flex; gap: 20px; font-weight: bold; }
@@ -23,13 +23,13 @@
         .gold-display { color: var(--gold); }
         .container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
         .nav-panel { background: var(--panel-bg); padding: 20px; border-radius: 12px; height: fit-content; }
-        .nav-btn { display: block; w-100; width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border: none; color: white; text-align: left; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; }
+        .nav-btn { display: block; width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border: none; color: white; text-align: left; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 600; }
         .nav-btn:hover, .nav-btn.active { background: var(--accent-blue); }
         .main-content { background: var(--panel-bg); padding: 30px; border-radius: 12px; min-height: 500px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         h1, h2, h3 { margin-bottom: 15px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; }
-        button.action-btn { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; transition: 0.2s; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; font-size: 14px; }
+        button.action-btn { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 10px; }
         button.action-btn:hover { opacity: 0.9; }
         .map-track { display: flex; justify-content: space-between; position: relative; margin: 30px 0; padding: 0 10px; }
         .map-track::before { content: ''; position: absolute; top: 20px; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 1; }
@@ -40,7 +40,7 @@
         .reroll-box { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .badge-grid, .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 15px; }
-        .badge-box, .store-card { background: rgba(255,255,255,0.05); p-15; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .badge-box, .store-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .badge-box.unlocked { border-color: var(--gold); background: rgba(245,158,11,0.1); }
         .badge-icon { font-size: 30px; margin-bottom: 5px; }
         .timer-box { font-size: 35px; font-weight: bold; color: var(--accent-blue); text-align: center; margin: 15px 0; letter-spacing: 2px; }
@@ -59,11 +59,11 @@
 
 <div class="container">
     <div class="nav-panel">
-        <button class="nav-btn active" onclick="switchTab('setup')">⚙️ Setup Deck</button>
-        <button class="nav-btn" onclick="switchTab('quest')">🎮 Active Quest</button>
-        <button class="nav-btn" onclick="switchTab('store')">🏪 Virtual Store</button>
-        <button class="nav-btn" onclick="switchTab('rewards')">🎁 Real Rewards</button>
-        <button class="nav-btn" onclick="switchTab('vault')">🏆 Trophy Vault</button>
+        <button id="btn-setup" class="nav-btn active" onclick="switchTab('setup')">⚙️ Setup Deck</button>
+        <button id="btn-quest" class="nav-btn" onclick="switchTab('quest')">🎮 Active Quest</button>
+        <button id="btn-store" class="nav-btn" onclick="switchTab('store')">🏪 Virtual Store</button>
+        <button id="btn-rewards" class="nav-btn" onclick="switchTab('rewards')">🎁 Real Rewards</button>
+        <button id="btn-vault" class="nav-btn" onclick="switchTab('vault')">🏆 Trophy Vault</button>
     </div>
 
     <div class="main-content">
@@ -113,7 +113,7 @@
                 <h3>Level 1 Structure: Outline Blueprint Selection</h3>
                 <p style="margin-bottom: 10px; color: var(--text-muted);">Review the automatically generated structural format matching your submission criteria below.</p>
                 <div class="reroll-box">
-                    <textarea id="structure-preview" rows="4" readonly></textarea>
+                    <textarea id="structure-preview" rows="5" readonly></textarea>
                     <button class="nav-btn" id="reroll-btn" onclick="rerollStructure()" style="width:auto; white-space:nowrap;">🎲 Try Another (<span id="reroll-count">5</span> left)</button>
                 </div>
                 <button class="action-btn" onclick="clearLevel(1)">Lock Format & Advance to Level 2 ➔</button>
@@ -155,4 +155,250 @@
             <!-- LEVEL 4 -->
             <div id="lvl-4-box" class="level-card hidden">
                 <h3>Level 4 Review: Rubric Calibration Guard</h3>
-                <div class="grid-2">
+Estimated Evaluation Rating
+C-
+
+
+📋 Automated Audit Logs & Feedback
+
+⚠️ Work volume is extremely short. Add more detailed points to build draft depth.
+
+
+
+🏆 Complete Quest & Claim Payouts!
+
+🏪 Item Shop & Power-up Matrix
+Spend your earned quest gold currency to purchase status items and profile skins.
+
+
+🦉
+Early Bird Familiar
++10% Early Launch Bonus Gold
+💰 50 Gold
+
+
+⏳
+Time Warp Potion
+Instantly resets 1 structural reroll count
+💰 30 Gold
+
+
+🔮
+Procrastination Mage
+Cosmetic avatar background theme wrapper
+💰 100 Gold
+
+
+🎁 Real-World Reward Voucher Conversion Hub
+Convert your study gold tokens into real-life reward permits to redeem with your parents or educators!
+
+
+🎮
+30-Min Gaming Permit
+🎟️ Redeem (80g)
+
+
+🍕
+Custom Dinner Night
+🎟️ Redeem (200g)
+
+
+🍿
+Movie Night Voucher
+🎟️ Redeem (150g)
+
+
+🏆 Achievement Trophy Vault
+
+📐ArchitectClear Level 1
+📜ScholarClear Level 2
+✒️WordsmithClear Level 3
+👑GrandmasterComplete Assignment
+
+📜 Ancestral Quest Archives Log
+
+No historic quests logged yet. Complete your setup phase to embark on missions!
+
+
+
+let globalXP = 0;
+let globalGold = 100;
+let globalLevel = 1;
+let rerollsRemaining = 5;
+let activeTaskType = 'essay';
+let pomodoroInterval = null;
+let secondsLeft = 1500;
+const structures = {
+essay: [
+"Structure Option A:\n1. Introduction (Hook & Thesis Statement)\n2. Main Body Pillar (Supporting Arguments)\n3. Counter-Argument Evaluation Layout\n4. Conclusion (Final Summary)",
+"Structure Option B:\n1. Problem Definition Statement\n2. Historical Core Catalysts Assessment\n3. Proposed Solutions Comparison\n4. Long-Term Feasibility Recommendation",
+"Structure Option C:\n1. Introduction & Context\n2. Group Alpha In-Depth Analysis\n3. Group Beta Functional Overlap\n4. Trend Evaluation & Synthesis Conclusion"
+],
+presentation: [
+"Presentation Deck Template A:\nSlide 1: Title & Presentation Overview Hook\nSlides 2-4: Core Problem Target & Statistics\nSlides 5-7: Core Solutions & Features Visuals\nSlide 8: Concluding Takeaway & Call to Action",
+"Presentation Deck Template B:\nSlide 1: Investigation Field Scope Title\nSlides 2-3: Core Background Research Baseline\nSlides 4-6: Data Graphs & Experimental Analysis\nSlides 7-8: Final Insights Summary & Discussion"
+]
+};
+const chapterData = {
+essay: [
+{ title: "Chapter 1: Writing Captivating Hooks", content: "🎬 CH. 1 VIDEO SUMMARY: Hook your reader immediately! Keep background hooks clean, active, and punchy. Aim for 2-3 sentences before your primary thesis statement." },
+{ title: "Chapter 2: Dynamic Essay Transitions", content: "📑 INFO CARD: Use professional transitions (e.g., 'Furthermore', 'Conversely', 'In contrast to prior assumptions') to connect consecutive body paragraphs." },
+{ title: "Chapter 3: Fact-Checking & Citations", content: "🎬 CH. 3 VIDEO SUMMARY: Cross-reference modern primary databases. Ensure all quotes match academic styling guides accurately." }
+],
+presentation: [
+{ title: "Chapter 1: The 10/20/30 Rule", content: "📑 INFO CARD: Keep slide frameworks limited to 10 visual frames total, present within a 20-minute window, using font sizes above 30pt for effortless readability." },
+{ title: "Chapter 2: Stage Presence & Vocal Pacing", content: "🎬 CH. 2 VIDEO SUMMARY: Maintain standard talking speeds. Do not read directly off the slide blocks. Pause briefly during transition slides." }
+]
+};
+function switchTab(tabId) {
+document.querySelectorAll('.main-content section').forEach(s => s.classList.add('hidden'));
+document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+document.getElementById(tab-${tabId}).classList.remove('hidden');
+const activeBtn = document.getElementById(btn-${tabId});
+if(activeBtn) activeBtn.classList.add('active');
+}
+function generateQuest() {
+const title = document.getElementById('task-title').value || "Assignment Quest Adventure";
+activeTaskType = document.getElementById('task-type').value;
+const days = parseInt(document.getElementById('task-days').value) || 5;
+document.getElementById('quest-header').innerText = ⚔️ Active Mission: ${title};
+rerollsRemaining = days <= 3 ? 2 : 5;
+document.getElementById('reroll-count').innerText = rerollsRemaining;
+const pool = structures[activeTaskType];
+document.getElementById('structure-preview').value = pool[0];
+const chapList = document.getElementById('chapters-list');
+chapList.innerHTML = '';
+chapterData[activeTaskType].forEach((ch) => {
+let btn = document.createElement('button');
+btn.className = 'nav-btn';
+btn.innerText = ch.title;
+btn.style.width = "100%";
+btn.style.textAlign = "left";
+btn.onclick = function() {
+document.getElementById('learning-content').innerText = ch.content;
+addRewards(15, 5);
+};
+chapList.appendChild(btn);
+});
+resetQuestMap();
+switchTab('quest');
+}
+function rerollStructure() {
+if (rerollsRemaining > 0) {
+rerollsRemaining--;
+document.getElementById('reroll-count').innerText = rerollsRemaining;
+const pool = structures[activeTaskType];
+const randomStruct = pool[Math.floor(Math.random() * pool.length)];
+document.getElementById('structure-preview').value = randomStruct;
+addRewards(10, 0);
+} else {
+alert("No reroll charges remaining! Purchase a Time Warp Potion in the store window to recharge.");
+}
+}
+function resetQuestMap() {
+document.querySelectorAll('.node').forEach((n, idx) => {
+n.className = idx === 0 ? 'node active' : 'node';
+});
+document.getElementById('lvl-1-box').classList.remove('hidden');
+document.getElementById('lvl-2-box').classList.add('hidden');
+document.getElementById('lvl-3-box').classList.add('hidden');
+document.getElementById('lvl-4-box').classList.add('hidden');
+}
+function clearLevel(lvlNum) {
+addRewards(100, 30);
+if(lvlNum === 1) document.getElementById('badge-architect').classList.add('unlocked');
+if(lvlNum === 2) document.getElementById('badge-scholar').classList.add('unlocked');
+if(lvlNum === 3) document.getElementById('badge-wordsmith').classList.add('unlocked');
+document.getElementById(node-${lvlNum}).className = 'node complete';
+let nextLvl = lvlNum + 1;
+if (document.getElementById(node-${nextLvl})) {
+document.getElementById(node-${nextLvl}).className = 'node active';
+}
+document.getElementById(lvl-${lvlNum}-box).classList.add('hidden');
+if (document.getElementById(lvl-${nextLvl}-box)) {
+document.getElementById(lvl-${nextLvl}-box).classList.remove('hidden');
+}
+}
+function updateReview() {
+const text = document.getElementById('draft-input').value;
+const scoreBox = document.getElementById('review-score');
+const tips = document.getElementById('feedback-tips');
+if(text.length < 50) {
+scoreBox.innerText = "C-";
+scoreBox.style.color = "#ef4444";
+tips.innerHTML = "⚠️ Work volume is extremely short. Add more detailed points to build draft depth.";
+} else if (text.length < 200) {
+scoreBox.innerText = "B+";
+scoreBox.style.color = "#f59e0b";
+tips.innerHTML = "✅ Word tracking looks promising!💡 Focus Tip: Review transitional continuity statements between points.";
+} else {
+scoreBox.innerText = "A+";
+scoreBox.style.color = "#10b981";
+tips.innerHTML = "✨ Exceptional coverage! Your draft has solid depth.✅ Core requirements met perfectly. Ready to finalize!";
+}
+}
+function finishQuest() {
+addRewards(300, 100);
+document.getElementById('badge-grandmaster').classList.add('unlocked');
+document.getElementById('node-4').className = 'node complete';
+const taskTitle = document.getElementById('task-title').value || "Assignment Quest Adventure";
+document.getElementById('history-log').innerHTML = 🟢 <strong>MISSION ACCOMPLISHED:</strong> "${taskTitle}" completed early! Structural victory yields processed.;
+alert("🎉 Mission Accomplished! Your final assignment draft is complete. Rewards added to your inventory!");
+switchTab('vault');
+}
+function addRewards(xp, gold) {
+globalXP += xp;
+globalGold += gold;
+globalLevel = Math.floor(globalXP / 300) + 1;
+document.getElementById('hud-xp').innerText = globalXP;
+document.getElementById('hud-gold').innerText = globalGold;
+document.getElementById('hud-level').innerText = globalLevel;
+}
+function togglePomodoro() {
+const btn = document.getElementById('pomo-btn');
+if (pomodoroInterval) {
+clearInterval(pomodoroInterval);
+pomodoroInterval = null;
+btn.innerText = "⏱️ Start Focus Timer";
+} else {
+btn.innerText = "⏸️ Pause Focus Timer";
+pomodoroInterval = setInterval(() => {
+if (secondsLeft > 0) {
+secondsLeft--;
+let m = Math.floor(secondsLeft / 60);
+let s = secondsLeft % 60;
+document.getElementById('pomodoro-time').innerText = ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')};
+if(secondsLeft % 30 === 0) addRewards(5, 1);
+} else {
+clearInterval(pomodoroInterval);
+alert("Focus session complete! +50 XP!");
+addRewards(50, 10);
+secondsLeft = 1500;
+document.getElementById('pomodoro-time').innerText = "25:00";
+btn.innerText = "⏱️ Start Focus Timer";
+}
+}, 1000);
+}
+}
+function buyItem(name, cost) {
+if(globalGold >= cost) {
+globalGold -= cost;
+document.getElementById('hud-gold').innerText = globalGold;
+if (name === 'Time Warp Potion') {
+rerollsRemaining++;
+document.getElementById('reroll-count').innerText = rerollsRemaining;
+}
+alert(🛒 Purchase Complete: ${name} activated!);
+} else {
+alert("❌ Insufficient gold! Finish tasks on the active quest panel to earn coins.");
+}
+}
+function claimRealReward(rewardName, cost) {
+if(globalGold >= cost) {
+globalGold -= cost;
+document.getElementById('hud-gold').innerText = globalGold;
+alert(🎟️ VOUCHER REDEEMED:\n------------------------\nReward: ${rewardName}\n\nPresent this code to your Parent/Teacher to collect your prize: QD-${Math.floor(Math.random()*90000 + 10000)});
+} else {
+alert("❌ Not enough gold saved up yet! Keep working in the draft deck!");
+}
+}
